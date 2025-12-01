@@ -1,14 +1,13 @@
 [project]
 name = "csc126final"
 version = "0.1.0"
-description = "Add your description here"
+description = "Aerial Drone Surveillance System with YOLOv8"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.123.0",
-    "fastapi-users[sqlalchemy]>=15.0.1",
-    "imagekitio>=4.2.0",
-    "psycopg2-binary>=2.9.11",
-    "python-dotenv>=1.2.1",
     "uvicorn[standard]>=0.38.0",
+    "ultralytics>=8.0.0",
+    "opencv-python>=4.8.0",
+    "cvzone>=1.6.1",
 ]

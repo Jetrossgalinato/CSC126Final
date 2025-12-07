@@ -30,7 +30,7 @@ stats = {"soldier": 0, "civilian": 0}
 stats_lock = threading.Lock()
 
 # Video source
-VIDEO_SOURCE = "drone_test.mp4"
+VIDEO_SOURCE = "drone_civilian.mp4"
 
 
 def generate_frames():

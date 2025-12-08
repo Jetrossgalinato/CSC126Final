@@ -122,9 +122,17 @@ def generate_frames(video_source: str, feed_type: str):
                 stats[feed_type]["civilian"] = len(seen_ids[feed_type]["civilian"])
             
             # Add overall statistics overlay
+            overlay_text = ""
+            if feed_type == "civilian_feed":
+                overlay_text = f"Civilians: {current_frame_civilian}"
+            elif feed_type == "soldier_feed":
+                overlay_text = f"Soldiers: {current_frame_soldier}"
+            else:
+                overlay_text = f"Soldiers: {current_frame_soldier} | Civilians: {current_frame_civilian}"
+
             cvzone.putTextRect(
                 frame,
-                f"Soldiers: {current_frame_soldier} | Civilians: {current_frame_civilian}",
+                overlay_text,
                 (10, 30),
                 scale=1.5,
                 thickness=2,

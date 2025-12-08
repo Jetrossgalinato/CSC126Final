@@ -29,19 +29,20 @@ class_colors = {0: (0, 255, 0), 1: (0, 0, 255)}  # Green for Civilian, Red for S
 stats = {"soldier": 0, "civilian": 0}
 stats_lock = threading.Lock()
 
-# Video source
-VIDEO_SOURCE = "drone_civilian.mp4"
+# Video sources
+VIDEO_SOURCE_CIVILIAN = "drone_civilian.mp4"
+VIDEO_SOURCE_SOLDIER = "drone_soldier.mp4"
 
 
-def generate_frames():
+def generate_frames(video_source: str):
     """Generate video frames with real-time detection and classification"""
     global stats
     
     while True:
-        cap = cv2.VideoCapture(VIDEO_SOURCE)
+        cap = cv2.VideoCapture(video_source)
         
         if not cap.isOpened():
-            print(f"Error: Cannot open video file {VIDEO_SOURCE}")
+            print(f"Error: Cannot open video file {video_source}")
             break
         
         while True:
@@ -137,20 +138,45 @@ async def root():
     return {
         "message": "Drone Surveillance System API",
         "endpoints": {
-            "/video_feed": "Streaming video with real-time detection",
+            "/video_feed/civilian": "Streaming video with civilian detection",
+            "/video_feed/soldier": "Streaming video with soldier detection",
             "/stats": "Current detection statistics"
         }
     }
+
+
+@app.get("/video_feed/civilian")
+async def video_feed_civilian():
+    """
+    Stream processed civilian video with real-time detection
+    Returns MJPEG stream
+    """
+    return StreamingResponse(
+        generate_frames(VIDEO_SOURCE_CIVILIAN),
+        media_type="multipart/x-mixed-replace; boundary=frame"
+    )
+
+
+@app.get("/video_feed/soldier")
+async def video_feed_soldier():
+    """
+    Stream processed soldier video with real-time detection
+    Returns MJPEG stream
+    """
+    return StreamingResponse(
+        generate_frames(VIDEO_SOURCE_SOLDIER),
+        media_type="multipart/x-mixed-replace; boundary=frame"
+    )
 
 
 @app.get("/video_feed")
 async def video_feed():
     """
     Stream processed video with real-time human detection and classification
-    Returns MJPEG stream
+    Returns MJPEG stream (defaults to civilian feed for backward compatibility)
     """
     return StreamingResponse(
-        generate_frames(),
+        generate_frames(VIDEO_SOURCE_CIVILIAN),
         media_type="multipart/x-mixed-replace; boundary=frame"
     )
 
